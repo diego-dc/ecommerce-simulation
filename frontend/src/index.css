@@ -1,0 +1,129 @@
+/* index.css */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+/* Import Tailwind's base layers */
+@import 'tailwindcss';
+
+
+/* CSS Custom Properties (variables) in the @theme selector */
+@theme {
+  /* --- COLORS --- */
+  --color-primary-100: #FEE8FC;
+  --color-primary-200: #F8C8F5;
+  --color-primary-300: #FBA4F5;
+  --color-primary-400: #EF91E9;
+  --color-primary-500: #E86CE0; /* Main primary color */
+  --color-primary-600: #C322B9;
+  --color-primary-700: #893883;
+  --color-primary-800: #7C4878;
+  --color-primary-900: #633C60;
+
+  --color-secondary-100: #DDFAFE;
+  --color-secondary-200: #C3F6FE;
+  --color-secondary-300: #79E8FB;
+  --color-secondary-400: #66E3F8;
+  --color-secondary-500: #2CD2EE; /* Main secondary color */
+  --color-secondary-600: #2EB8CF;
+  --color-secondary-700: #1292A8;
+  --color-secondary-800: #1F7482;
+  --color-secondary-900: #28565E;
+
+  /* Status colors (success, error, warning, info) */
+  --color-success-100: #EAF9F0;
+  --color-success-200: #D0F3DF;
+  --color-success-300: #A3DBBA;
+  --color-success-400: #77D09B;
+  --color-success-500: #52BF83;
+  --color-success-600: #2B925A;
+  --color-success-700: #259155;
+  --color-success-800: #11753D;
+  --color-success-900: #025A29;
+
+  --color-error-100: #FEEBEB;
+  --color-error-200: #FACECE;
+  --color-error-300: #F69C9C;
+  --color-error-400: #F97575;
+  --color-error-500: #F35454;
+  --color-error-600: #F12C2C;
+  --color-error-700: #E70C0C;
+  --color-error-800: #B70505;
+  --color-error-900: #910707;
+
+  --color-warning-100: #FFFBD5;
+  --color-warning-200: #FAEEB2;
+  --color-warning-300: #FBE786;
+  --color-warning-400: #FADA7B;
+  --color-warning-500: #F3C754;
+  --color-warning-600: #DEBD2B;
+  --color-warning-700: #A78905;
+  --color-warning-800: #9A5A00;
+  --color-warning-900: #5C3901;
+
+  --color-info-100: #DDFAFE;
+  --color-info-200: #C3F6FE;
+  --color-info-300: #79E8FB;
+  --color-info-400: #66E3F8;
+  --color-info-500: #2CD2EE;
+  --color-info-600: #2EB8CF;
+  --color-info-700: #1292A8;
+  --color-info-800: #1F7482;
+  --color-info-900: #28565E;
+
+  /* Neutral colors (grays) */
+  --color-neutral-white: #F9F9F9;
+  --color-neutral-black: #161616;
+  --color-neutral-100: #F2F2F2;
+  --color-neutral-200: #E2E2E2;
+  --color-neutral-300: #CDCDCD;
+  --color-neutral-400: #AFAFAF;
+  --color-neutral-500: #868686;
+  --color-neutral-600: #5D5D5D;
+  --color-neutral-700: #474747;
+  --color-neutral-800: #2E2E2E;
+  --color-neutral-900: #1F1F1F;
+
+  /* --- TYPOGRAPHY --- */
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Merriweather", "serif";
+  --font-mono: "Fira Code", "monospace";
+  --font-body: "Reddit Sans"; /* Your custom body font */
+
+
+  /* Easing functions (Tailwind will generate ease-{name}) */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation definitions (Tailwind will generate animate-{name}) */
+  /* Keyframes must be defined within @theme to be recognized for animation utilities */
+  --animate-fadeIn: fadeIn var(--transition-duration-500) var(--ease-out) forwards;
+  --animate-slideInFromLeft: slideInFromLeft var(--transition-duration-700) var(--ease-out);
+  --animate-slideInFromTop: slideInFromTop var(--transition-duration-700) var(--ease-out);
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInFromLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slideInFromTop {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+}
+
+
+:root {
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+
+  }
+}
