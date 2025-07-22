@@ -118,105 +118,98 @@ const ShippingDetailsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
-      <h1 className="mb-6 text-3xl font-bold text-gray-800">
-        Ingresar Datos de Envío
-      </h1>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="relative max-w-3xl p-12 overflow-hidden border rounded-lg shadow-lg border-white/20 bg-white/10 backdrop-blur-md backdrop-saturate-150">
+        <div className="relative z-10 flex flex-col items-center text-white">
+          <h1 className="mb-6 text-3xl font-bold">Ingresar Datos de Envío</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Nombre Completo
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="shipping_street"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Dirección (Calle y Número)
-          </label>
-          <input
-            type="text"
-            id="shipping_street"
-            name="shipping_street"
-            value={formData.shipping_street}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="commune"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Comuna
-          </label>
-          <input
-            type="text"
-            id="commune"
-            name="commune"
-            value={formData.commune}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="phone"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Teléfono
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-        </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium">
+                Nombre Completo
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="shipping_street"
+                className="block text-sm font-medium"
+              >
+                Dirección (Calle y Número)
+              </label>
+              <input
+                type="text"
+                id="shipping_street"
+                name="shipping_street"
+                value={formData.shipping_street}
+                onChange={handleChange}
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="commune" className="block text-sm font-medium">
+                Comuna
+              </label>
+              <input
+                type="text"
+                id="commune"
+                name="commune"
+                value={formData.commune}
+                onChange={handleChange}
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium">
+                Teléfono
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
 
-        <div className="flex justify-between pt-4 space-x-4">
-          <button
-            type="button"
-            onClick={() => navigate("/checkout")}
-            className="px-4 py-2 text-white bg-gray-500 rounded-lg shadow-md hover:bg-gray-600"
-          >
-            Volver
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700"
-          >
-            Guardar Datos
-          </button>
-          <button
-            type="button"
-            onClick={handleQuoteShipping}
-            disabled={isLoading}
-            className="px-4 py-2 text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Cotizando..." : "Cotizar Despacho"}
-          </button>
+            <div className="flex justify-between pt-4 space-x-4">
+              <button
+                type="button"
+                onClick={() => navigate("/checkout")}
+                className="px-4 py-2 bg-gray-500 rounded-lg shadow-md hover:bg-gray-600"
+              >
+                Volver
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700"
+              >
+                Guardar Datos
+              </button>
+              <button
+                type="button"
+                onClick={handleQuoteShipping}
+                disabled={isLoading}
+                className="px-4 py-2 text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Cotizando..." : "Cotizar Despacho"}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

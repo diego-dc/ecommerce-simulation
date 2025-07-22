@@ -6,6 +6,8 @@ import type { RootState } from "../store";
 import { setCart, setError, setLoading } from "../store/cartSlice";
 import { fetchRandomCart } from "../services/apiServices";
 import toast from "react-hot-toast";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Button from "../components/ui/Button";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,33 +44,53 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="mb-8 text-4xl font-bold text-gray-800">
-        Bienvenido a Flapp E-commerce
-      </h1>
-      <div className="flex space-x-4">
-        <button
-          onClick={handleGenerateCart}
-          disabled={isLoading}
-          className="px-6 py-3 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Generando..." : "Generar Carrito"}
-        </button>
-        <button
-          onClick={handleGoToCheckout}
-          disabled={cartItems.length === 0}
-          className="px-6 py-3 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Finalizar Compra
-        </button>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="relative p-12 overflow-hidden transition-all border rounded-lg shadow-lg transition-duration-700 animate-fadeIn border-neutral-white/20 bg-neutral-white/10 backdrop-blur-md backdrop-saturate-150">
+        <div className="relative z-10 flex flex-col items-center text-center text-neutral-white">
+          <h1 className="mb-8 text-4xl font-bold">
+            Bienvenido a E-commerce Simulator
+          </h1>
+          <Button
+            onClick={handleGenerateCart}
+            disabled={isLoading}
+            buttonType="primary"
+            iconRight={isLoading ? "mdi:loading" : "mdi:cart-plus"}
+          >
+            {isLoading ? "Generando..." : "Generar Carrito"}
+          </Button>
+
+          {cartItems.length > 0 ? (
+            <>
+              <p className="mt-4 text-gray-200">
+                Carrito cargado con {cartItems.length} productos.
+              </p>
+              <Icon
+                icon="mdi:cart"
+                className="inline-block w-auto h-48 transition-all animate-fadeIn"
+              />
+              <Button
+                buttonType="success"
+                iconRight="mingcute:check-circle-fill"
+                onClick={handleGoToCheckout}
+                disabled={cartItems.length === 0}
+                className="mt-6"
+              >
+                Finalizar Compra
+              </Button>
+            </>
+          ) : (
+            <Icon
+              icon="mingcute:emoji-fill"
+              className="inline-block w-auto h-48 transition-all transition-duration-700 animate-fadeIn"
+            />
+          )}
+          {cartItems.length === 0 && (
+            <p className="mt-4 text-white-400">
+              Genera un carrito para comenzar!
+            </p>
+          )}
+        </div>
       </div>
-      {cartItems.length > 0 && (
-        <p className="mt-4 text-gray-700">
-          Carrito cargado con {cartItems.length} productos.
-        </p>
-      )}
-      {/* Puedes mostrar errores aquí si lo deseas, aunque los toasts ya los manejan */}
-      {/* {error && <p className="mt-4 text-red-500">{error}</p>} */}
     </div>
   );
 };

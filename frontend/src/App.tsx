@@ -2,18 +2,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ShippingDetailsPage from "./pages/ShippingDetailsPage";
-import Navbar from "./components/layout/Navbar";
+import Background from "./components/layout/Background";
 
 function App() {
   return (
     <Router>
-      <Navbar></Navbar>
       <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/shipping" element={<ShippingDetailsPage />} />
-        </Routes>
+        <Background>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/shipping" element={<ShippingDetailsPage />} />
+          </Routes>
+        </Background>
       </main>
     </Router>
   );
