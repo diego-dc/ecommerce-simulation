@@ -2,10 +2,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import requests # For making HTTP requests to dummyjson.com and couriers
-import math # For floor division
+import requests
+import math
+import os
 
 from apps.ecommerce.serializers import CartPurchaseSerializer
+
+FLAPP_API_KEY_UDER = os.getenv("FLAPP_API_KEY_UDER")
+FLAPP_API_KEY_TRAELO_YA = os.getenv("FLAPP_API_KEY_TRAELO_YA")
 
 class CartPurchaseAPIView(APIView):
     """
@@ -17,8 +21,8 @@ class CartPurchaseAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Extract validated data
-        products_requested = serializer.validated_data['products']
-        customer_data = serializer.validated_data['customer_data']
+        products_requested = serializer.validated_data['products'] # type: ignore
+        customer_data = serializer.validated_data['customer_data'] # type: ignore
 
         # 1. Get all products from dummyjson.com with pagination
         #    (Simulating DB query)
@@ -48,7 +52,7 @@ class CartPurchaseAPIView(APIView):
                 "quantity_requested": item['quantity'],
                 "stock_obtained": st,
                 "rating": r,
-                "stock_real": sr
+                "stock_real": sr,
             })
             
             # Print to console (Requirement d)
@@ -78,18 +82,10 @@ class CartPurchaseAPIView(APIView):
             "address": "Juan de Valiente 3630",
             "commune": "Vitacura"
         }
-
-        # NOTE: Implement actual courier API calls here
-        # For now, let's simulate responses based on the "Tarificación de Envíos" document
-        # You'll replace this with actual HTTP requests to TraeloYa and Uder.
-
-        # Placeholder for TraeloYa and Uder responses - YOU MUST IMPLEMENT THIS
-        # Based on the "Tarificación de Envíos" document, you'll construct the
-        # specific request body for each courier and make the actual API calls.
-        # This is a critical part you'll need to fill in.
         
-        traelo_ya_price = self._get_traelo_ya_price(customer_data, courier_origin_data)
-        uder_price = self._get_uder_price(customer_data, courier_origin_data)
+        # Pass processed_products to courier methods for item details
+        traelo_ya_price = self._get_traelo_ya_price(customer_data, courier_origin_data, processed_products)
+        uder_price = self._get_uder_price(customer_data, courier_origin_data, processed_products)
 
         print("\n--- Courier Tarification Responses ---")
         print(f"TraeloYa Price: {traelo_ya_price}")
@@ -110,7 +106,7 @@ class CartPurchaseAPIView(APIView):
         
         if best_courier is None:
             return Response(
-                {"error": "Could not obtain shipping prices from couriers."},
+                {"error": "Could not obtain shipping prices from couriers. Please try again."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -127,14 +123,14 @@ class CartPurchaseAPIView(APIView):
         all_products = []
         limit = 10
         skip = 0
-        total_products = -1 # Sentinel value to start loop
+        total_products = -1
 
         print("\n--- Fetching products from dummyjson.com ---")
         while total_products == -1 or skip < total_products:
             url = f"https://dummyjson.com/products?limit={limit}&skip={skip}"
             try:
                 response = requests.get(url, timeout=10)
-                response.raise_for_status() # Raise an HTTPError for bad responses (4xx or 5xx)
+                response.raise_for_status()
                 data = response.json()
                 
                 products = data.get('products', [])
@@ -159,65 +155,98 @@ class CartPurchaseAPIView(APIView):
         print(f"Finished fetching {len(all_products)} products from dummyjson.com.")
         return all_products
 
-    def _get_traelo_ya_price(self, customer_data, origin_data):
+    def _get_traelo_ya_price(self, customer_data, origin_data, products_list):
         """
-        Simulates calling TraeloYa API for pricing.
-        YOU MUST REPLACE THIS WITH ACTUAL API CALL LOGIC.
+        Calls TraeloYa API for pricing.
         """
-        # Placeholder: This is where you'd make an actual HTTP POST request to TraeloYa.
-        # Construct the request body according to TraeloYa's documentation.
-        print(f"DEBUG: Simulating TraeloYa call with customer_data: {customer_data}, origin_data: {origin_data}")
-        # Example of what you might send:
-        # traelo_ya_payload = {
-        #     "origin": {
-        #         "address": origin_data['address'],
-        #         "commune": origin_data['commune'],
-        #         "contact_name": origin_data['name'],
-        #         "phone": origin_data['phone']
-        #     },
-        #     "destination": {
-        #         "address": customer_data['shipping_street'],
-        #         "commune": customer_data['commune'],
-        #         "contact_name": customer_data['name'],
-        #         "phone": customer_data['phone']
-        #     },
-        #     "packages": [...] # Details about products if needed by courier for weight/dimensions
-        # }
-        # try:
-        #     response = requests.post("https://traeloya.com/api/tarifar", json=traelo_ya_payload, timeout=5)
-        #     response.raise_for_status()
-        #     return response.json().get('price')
-        # except requests.exceptions.RequestException as e:
-        #     print(f"Error calling TraeloYa API: {e}")
-        #     return None # Indicate failure to get price
+        url = "https://recruitment.weflapp.com/tarifier/traelo_ya"
+        headers = {"X-Api-Key": FLAPP_API_KEY_TRAELO_YA}
+
+        # Build 'items' payload
+        items_payload = []
+        for product in products_list:
+            items_payload.append({
+                "quantity": product['quantity_requested'],
+                "value": product['price_per_unit'],
+                "volume": product['volume_per_unit'] * product['quantity_requested'] # Total volume for all units of this product
+            })
+
+        payload = {
+            "items": items_payload,
+            "waypoints": [
+                {
+                    "type": "PICK_UP",
+                    "addressStreet": origin_data['addressStreet'],
+                    "city": origin_data['city'],
+                    "phone": origin_data['phone'],
+                    "name": origin_data['name']
+                },
+                {
+                    "type": "DROP_OFF",
+                    "addressStreet": customer_data['shipping_street'],
+                    "city": customer_data['commune'],
+                    "phone": customer_data['phone'],
+                    "name": customer_data['name']
+                }
+            ]
+        }
+
+        print(f"DEBUG: Calling TraeloYa API with payload: {payload}")
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            response.raise_for_status() # Raises HTTPError for bad responses (4xx or 5xx)
+            
+            response_json = response.json()
+            if "error" in response_json:
+                print(f"TraeloYa API returned error: {response_json['error']}")
+                return None
+            
+            # Navigate to the total price
+            return response_json.get('deliveryOffers', {}).get('pricing', {}).get('total')
         
-        # For now, return a dummy price
-        return 5.50 # Example dummy price
+        except requests.exceptions.RequestException as e:
+            print(f"Error calling TraeloYa API: {e}")
+            return None # Indicate failure to get price
 
-    def _get_uder_price(self, customer_data, origin_data):
+    def _get_uder_price(self, customer_data, origin_data, products_list):
         """
-        Simulates calling Uder API for pricing.
-        YOU MUST REPLACE THIS WITH ACTUAL API CALL LOGIC.
+        Calls Uder API for pricing.
         """
-        # Placeholder: This is where you'd make an actual HTTP POST request to Uder.
-        # Construct the request body according to Uder's documentation.
-        print(f"DEBUG: Simulating Uder call with customer_data: {customer_data}, origin_data: {origin_data}")
-        # Example of what you might send:
-        # uder_payload = {
-        #     "from_address": origin_data['address'],
-        #     "from_commune": origin_data['commune'],
-        #     "to_address": customer_data['shipping_street'],
-        #     "to_commune": customer_data['commune'],
-        #     "customer_phone": customer_data['phone'],
-        #     "items": [...] # Product details
-        # }
-        # try:
-        #     response = requests.post("https://uder.cl/api/calculate_shipping", json=uder_payload, timeout=5)
-        #     response.raise_for_status()
-        #     return response.json().get('cost')
-        # except requests.exceptions.RequestException as e:
-        #     print(f"Error calling Uder API: {e}")
-        #     return None # Indicate failure to get price
+        url = "https://recruitment.weflapp.com/tarifier/uder"
+        headers = {"X-Api-Key": FLAPP_API_KEY_UDER}
 
-        # For now, return a dummy price
-        return 7.25 # Example dummy price
+        # Build 'manifest_items' payload
+        manifest_items_payload = []
+        for product in products_list:
+            manifest_items_payload.append({
+                "name": product['name'],
+                "quantity": product['quantity_requested'],
+                "price": product['price_per_unit'],
+                "dimensions": product['dimensions_per_unit'] # Use the dummy dimensions
+            })
+
+        payload = {
+            "pickup_address": origin_data['addressStreet'],
+            "pickup_name": origin_data['name'],
+            "pickup_phone_number": origin_data['phone'],
+            "dropoff_address": customer_data['shipping_street'],
+            "dropoff_name": customer_data['name'],
+            "dropoff_phone_number": customer_data['phone'],
+            "manifest_items": manifest_items_payload
+        }
+
+        print(f"DEBUG: Calling Uder API with payload: {payload}")
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            response.raise_for_status() # Raises HTTPError for bad responses (4xx or 5xx)
+            
+            response_json = response.json()
+            if "error" in response_json:
+                print(f"Uder API returned error: {response_json['error']}")
+                return None
+            
+            return response_json.get('fee')
+        
+        except requests.exceptions.RequestException as e:
+            print(f"Error calling Uder API: {e}")
+            return None # Indicate failure to get price
