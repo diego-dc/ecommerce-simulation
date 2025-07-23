@@ -24,7 +24,7 @@ const CheckoutPage: React.FC = () => {
 
   const handleClearCart = () => {
     dispatch(clearCart());
-    toast.success("Carrito limpiado y vuelto a la vista inicial.");
+    toast.success("Carrito limpiado.");
     navigate("/");
   };
 
@@ -43,7 +43,7 @@ const CheckoutPage: React.FC = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <h2 className="mb-4 text-2xl font-bold text-gray-700">
           Tu carrito está vacío.
         </h2>

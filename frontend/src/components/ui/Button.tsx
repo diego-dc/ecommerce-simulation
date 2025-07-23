@@ -1,14 +1,13 @@
-// Button.jsx (o Button.tsx)
 import React from "react";
 import { Icon } from "@iconify/react";
 
-// Definimos los tipos para las props si estás usando TypeScript
+// types for the button
 type ButtonType = "primary" | "success" | "error" | "warning";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   buttonType?: ButtonType;
-  iconRight?: string; // Nombre del icono de Iconify, ej: "material-symbols:arrow-right-alt-rounded"
-  children?: React.ReactNode; // El texto o contenido del botón
+  iconRight?: string; // name of the icon (iconify icon name)
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -19,7 +18,6 @@ export default function Button({
   className = "",
   ...props
 }: ButtonProps) {
-  // Define las clases de Tailwind para cada tipo de botón
   const baseClasses =
     "px-6 py-3 rounded-lg shadow-md transition-colors duration-300 flex items-center justify-center gap-2 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -38,10 +36,7 @@ export default function Button({
   } ${className}`;
 
   return (
-    <button
-      className={combinedClasses}
-      {...props} // Pasa todas las demás props al elemento <button>
-    >
+    <button className={combinedClasses} {...props}>
       {children}
       {iconRight && <Icon icon={iconRight} className="text-xl" />}
     </button>
