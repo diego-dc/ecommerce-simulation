@@ -1,0 +1,132 @@
+/* index.css */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+/* Import Tailwind's base layers */
+@import 'tailwindcss';
+
+
+/* CSS Custom Properties (variables) in the @theme selector */
+@theme {
+
+  /* --- COLORS --- */
+  --color-primary-100: #E6EEFA;
+  --color-primary-200: #B3C8EA;
+  --color-primary-300: #809EDF;
+  --color-primary-400: #4D74D4;
+  --color-primary-500: #2452B3;
+  --color-primary-600: #1C408F;
+  --color-primary-700: #142E6B;
+  --color-primary-800: #0C1E47;
+  --color-primary-900: #08122D;
+
+  /* Status colors (success, error, warning, info) */
+  --color-success-100: #E1F7F1; /* Nuevo Verde: Tinte muy claro (verde azulado) */
+  --color-success-200: #B4E8DC;
+  --color-success-300: #86D9C8;
+  --color-success-400: #58CBBA;
+  --color-success-500: #2FB28E; /* Nuevo Verde: Verde azulado vibrante */
+  --color-success-600: #268E71;
+  --color-success-700: #1E6B56;
+  --color-success-800: #15483A;
+  --color-success-900: #0D251F;
+
+  --color-error-100: #F7E7ED;
+  --color-error-200: #EBBDCC;
+  --color-error-300: #DF93AB;
+  --color-error-400: #D36A89;
+  --color-error-500: #C74167; 
+  --color-error-600: #A93556;
+  --color-error-700: #8C2A45;
+  --color-error-800: #6E1F34;
+  --color-error-900: #511423;
+
+  --color-warning-100: #FFF9E6;
+  --color-warning-200: #FAECC0;
+  --color-warning-300: #F5E09A;
+  --color-warning-400: #F0D374;
+  --color-warning-500: #EBC64D;
+  --color-warning-600: #C9A73F;
+  --color-warning-700: #A78931;
+  --color-warning-800: #856B23;
+  --color-warning-900: #644D16;
+
+  --color-info-100: #E6F8FB;
+  --color-info-200: #B3EFF7;
+  --color-info-300: #80E5F3;
+  --color-info-400: #4DDCEF;
+  --color-info-500: #24D2EB;
+  --color-info-600: #1EADC5;
+  --color-info-700: #18899F;
+  --color-info-800: #126579;
+  --color-info-900: #0C4252;
+
+  /* Neutral colors (grays) */
+  --color-neutral-white: #F9F9F9;
+  --color-neutral-black: #161616;
+  --color-neutral-100: #F2F2F2;
+  --color-neutral-200: #E2E2E2;
+  --color-neutral-300: #CDCDCD;
+  --color-neutral-400: #AFAFAF;
+  --color-neutral-500: #868686;
+  --color-neutral-600: #5D5D5D;
+  --color-neutral-700: #474747;
+  --color-neutral-800: #2E2E2E;
+  --color-neutral-900: #1F1F1F;
+
+  /* --- TYPOGRAPHY --- */
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Merriweather", "serif";
+  --font-mono: "Fira Code", "monospace";
+  --font-body: "Reddit Sans"; /* Your custom body font */
+
+    /* --- TRANSITION DURATIONS --- */
+  --transition-duration-50: 50ms;
+  --transition-duration-75: 75ms;
+  --transition-duration-100: 100ms;
+  --transition-duration-150: 150ms;
+  --transition-duration-200: 200ms;
+  --transition-duration-300: 300ms;
+  --transition-duration-500: 500ms; /* <--- ADDED THIS DEFINITION */
+  --transition-duration-700: 700ms; /* <--- ADDED THIS DEFINITION */
+  --transition-duration-1000: 1000ms;
+
+  /* Easing functions (Tailwind will generate ease-{name}) */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation definitions (Tailwind will generate animate-{name}) */
+  /* Keyframes must be defined within @theme to be recognized for animation utilities */
+  --animate-fadeIn: fadeIn var(--transition-duration-500) var(--ease-out) forwards;
+  --animate-slideInFromLeft: slideInFromLeft var(--transition-duration-700) var(--ease-out);
+  --animate-slideInFromTop: slideInFromTop var(--transition-duration-700) var(--ease-out);
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInFromLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slideInFromTop {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  
+}
+
+
+:root {
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: white;
+
+  }
+}
