@@ -15,7 +15,7 @@ Este proyecto es un simulador simple de una compra de carro de un e-commerce ful
     - [Iniciar el Frontend](#iniciar-el-frontend)
 5.  [Uso de la Aplicación](#-uso-de-la-aplicación)
 6.  [Endpoints de la API (Backend)](#-endpoints-de-la-api-backend)
-7.  [Supuestos] (#-supuestos)
+7.  [Supuestos](#-supuestos)
 
 ---
 
@@ -134,7 +134,7 @@ El frontend se inicia automáticamente con docker-compose up -d ya que está con
 
     El backend API debería estar disponible en http://localhost:8000.
 
-### 🧭 Uso de la Aplicación
+## 🧭 Uso de la Aplicación
 
 Página Inicial: Accede a http://localhost:5173. Verás dos botones:
 
@@ -158,7 +158,7 @@ Vista de Datos de Envío: Completa los campos de nombre, dirección (calle y com
 
     "Volver": Regresa a la vista de checkout.
 
-### 🌐 Endpoints de la API (Backend)
+## 🌐 Endpoints de la API (Backend)
 
 El backend expone el siguiente endpoint principal:
 
@@ -170,7 +170,7 @@ POST /api/cart/:
 
     Response: Retorna la mejor opción de despacho (price y courier) o un mensaje de error si no hay envíos disponibles.
 
-### Supuestos
+## Supuestos
 
 - Los carritos contienen entre **1 y 10 productos aleatorios**, con **1 a 5 unidades** por producto.
 - Los precios se aproximan al **segundo decimal**.
