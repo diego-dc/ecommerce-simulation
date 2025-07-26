@@ -12,11 +12,10 @@ Este proyecto es un simulador simple de una compra de carro de un e-commerce ful
     - [Clonar el Repositorio](#clonar-el-repositorio)
     - [Configuración de Variables de Entorno](#configuración-de-variables-de-entorno)
     - [Construir y Ejecutar con Docker Compose](#construir-y-ejecutar-con-docker-compose)
-    - [Configuración Inicial de la Base de Datos (Opcional)](#configuración-inicial-de-la-base-de-datos-opcional)
     - [Iniciar el Frontend](#iniciar-el-frontend)
 5.  [Uso de la Aplicación](#-uso-de-la-aplicación)
-6.  [Estructura del Proyecto](#-estructura-del-proyecto)
-7.  [Endpoints de la API (Backend)](#-endpoints-de-la-api-backend)
+6.  [Endpoints de la API (Backend)](#-endpoints-de-la-api-backend)
+7.  [Supuestos] (#-supuestos)
 
 ---
 
@@ -81,8 +80,8 @@ Asegúrate de tener instalado lo siguiente:
 Abre tu terminal y ejecuta:
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd <NOMBRE_DE_TU_CARPETA_PROYECTO>
+git clone <https://github.com/diego-dc/ecommerce-simulation>
+cd <ecommerce-simulation>
 ```
 
 ### Configuración de Variables de Entorno
@@ -104,37 +103,30 @@ El backend utiliza variables de entorno para su configuración.
     SECRET_KEY=your_django_secret_key_here
 
     # Flapp API Keys for courier services
-    FLAPP_API_KEY_UDER="NDM6HWuxtyQ9saYqnZgbJBVrS8A7KpeXRjGv2m5c"
-    FLAPP_API_KEY_TRAELO_YA="MbUP6JzTNB3kC5rjwFS2neuahLE7yKvZs8HXtmqf"
-
-    # Database settings (used by Django's internal modules, even if no custom models)
-    DB_NAME=flapp_ecommerce_db
-    DB_USER=admin
-    DB_PASSWORD=supreme_dj
-    DB_HOST=db
-    DB_PORT=5432
+    FLAPP_API_KEY_UDER="SOLICITAR KEYS"
+    FLAPP_API_KEY_TRAELO_YA="SOLICITAR KEYS"
 
     Puedes generar una SECRET_KEY ejecutando docker-compose exec backend python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())' una vez que el backend esté en funcionamiento.
+
+    SE ENTREGARÁ UN .ENV CON LOS DATOS CORRESPONDIENTES.
 
 ### Construir y Ejecutar con Docker Compose
 
 Desde la raíz del proyecto (donde se encuentra docker-compose.yml), ejecuta los siguientes comandos:
 
-    Construir las imágenes de Docker:
-    Este comando construirá las imágenes para el backend, frontend y la base de datos, instalando todas las dependencias.
-    Bash
+Construir las imágenes de Docker:
+Este comando construirá las imágenes para el backend, frontend y la base de datos, instalando todas las dependencias.
 
-docker-compose build
+    docker-compose build
 
 Iniciar los servicios:
 Este comando levantará los contenedores del backend, frontend y la base de datos en segundo plano.
-Bash
 
     docker-compose up -d
 
     Para ver los logs de los contenedores en tiempo real, puedes usar docker-compose logs -f.
 
-Iniciar el Frontend
+### Iniciar el Frontend
 
 El frontend se inicia automáticamente con docker-compose up -d ya que está configurado en el docker-compose.yml.
 
@@ -142,46 +134,48 @@ El frontend se inicia automáticamente con docker-compose up -d ya que está con
 
     El backend API debería estar disponible en http://localhost:8000.
 
-🧭 Uso de la Aplicación
+### 🧭 Uso de la Aplicación
 
-    Página Inicial: Accede a http://localhost:5173. Verás dos botones:
+Página Inicial: Accede a http://localhost:5173. Verás dos botones:
 
-        "Generar Carrito": Haz clic para obtener un carrito de compras aleatorio de dummyjson.com. La aplicación mostrará un icono de carrito y un mensaje indicando el número de productos.
+    "Generar Carrito": Haz clic para obtener un carrito de compras aleatorio de dummyjson.com. La aplicación mostrará un icono de carrito y un mensaje indicando el número de productos.
 
-        "Finalizar Compra": Una vez que tengas un carrito cargado, haz clic para navegar a la vista de checkout.
+    "Finalizar Compra": Una vez que tengas un carrito cargado, haz clic para navegar a la vista de checkout.
 
-    Vista de Checkout: Aquí verás el resumen de los productos en tu carrito. Tienes las siguientes opciones:
+Vista de Checkout: Aquí verás el resumen de los productos en tu carrito. Tienes las siguientes opciones:
 
-        "Cotizar Despacho": Te llevará a la vista de ingreso de datos de envío. Si ya los has ingresado, procederá a cotizar.
+    "Cotizar Despacho": Te llevará a la vista de ingreso de datos de envío. Si ya los has ingresado, procederá a cotizar.
 
-        "Limpiar Carrito": Vacía el carrito actual y te devuelve a la página inicial.
+    "Limpiar Carrito": Vacía el carrito actual y te devuelve a la página inicial.
 
-        "Volver": Te devuelve a la página inicial sin limpiar el carrito.
+    "Volver": Te devuelve a la página inicial sin limpiar el carrito.
 
-    Vista de Datos de Envío: Completa los campos de nombre, dirección (calle y comuna) y teléfono.
+Vista de Datos de Envío: Completa los campos de nombre, dirección (calle y comuna) y teléfono.
 
-        "Guardar Datos": Guarda la información ingresada.
+    "Guardar Datos": Guarda la información ingresada.
 
-        "Cotizar Despacho": Envía el carrito y los datos de envío al backend. Si es exitoso, mostrará el costo y el courier; si falla, un mensaje de error. La cotización se mostrará en la vista de checkout.
+    "Cotizar Despacho": Envía el carrito y los datos de envío al backend. Si es exitoso, mostrará el costo y el courier; si falla, un mensaje de error. La cotización se mostrará en la vista de checkout.
 
-        "Volver": Regresa a la vista de checkout.
+    "Volver": Regresa a la vista de checkout.
 
 ### 🌐 Endpoints de la API (Backend)
 
 El backend expone el siguiente endpoint principal:
 
-    POST /api/cart/:
+POST /api/cart/:
 
-        Descripción: Recibe la información del carrito y los datos del cliente para simular una compra y cotizar el despacho.
+    Descripción: Recibe la información del carrito y los datos del cliente para simular una compra y cotizar el despacho.
 
-        Request Body: Contiene products (lista de productos con productId, price, quantity, discount) y customer_data (nombre, dirección, comuna, teléfono).
+    Request Body: Contiene products (lista de productos con productId, price, quantity, discount) y customer_data (nombre, dirección, comuna, teléfono).
 
-        Response: Retorna la mejor opción de despacho (price y courier) o un mensaje de error si no hay envíos disponibles.
+    Response: Retorna la mejor opción de despacho (price y courier) o un mensaje de error si no hay envíos disponibles.
 
-# Ecommerce-simulation Supuestos
+### Supuestos
 
 - Los carritos contienen entre **1 y 10 productos aleatorios**, con **1 a 5 unidades** por producto.
 - Los precios se aproximan al **segundo decimal**.
 - Al volver a la página inicial desde checkout, el carrito **no se borra**.
 - Solo se limpia el carrito cuando el usuario lo solicita explícitamente.
 - Para el cálculo del despacho se utiliza el **volumen total de cada producto (volumen × cantidad)**.
+
+** EL proyeto quedó configurado para correr en local solamente **
