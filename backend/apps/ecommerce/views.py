@@ -24,11 +24,11 @@ class CartPurchaseAPIView(APIView):
         products_requested = serializer.validated_data['products'] # type: ignore
         customer_data = serializer.validated_data['customer_data'] # type: ignore
 
-        # 1. Get all products from dummyjson.com with pagination
-        #    (Simulating DB query)
+        # Get all products from dummyjson.com with pagination
+        # (Simulating DB query)
         all_dummy_products = self._get_all_dummy_products()
 
-        # 2. Process requested products: get name, stock, rating, calculate Sr
+        # Process requested products: get name, stock, rating, calculate Sr
         processed_products = []
         for item in products_requested:
             product_id = str(item['productId']) # Ensure ID is string for lookup
@@ -44,29 +44,41 @@ class CartPurchaseAPIView(APIView):
             r = matched_product.get('rating', 1) # Default rating to 1 to avoid division by zero
             sr = math.floor(st / r) if r > 0 else 0 # Calculate Sr, handle r=0
 
+            # we calculate the total volume of the product. 
+            # for this, we take the 'dimensions' - 'width', 'height', 'length'
+            total_volume = matched_product.get('dimensions', {}).get('width', 0) * \
+                           matched_product.get('dimensions', {}).get('height', 0) * \
+                           matched_product.get('dimensions', {}).get('depth', 0)
+
             processed_products.append({
                 "id": product_id,
                 "name": matched_product.get('title', 'N/A'),
                 "price_per_unit": item['price'],
-                "total_discount": item['discount'], # This is discount *per item*, not total for the product
+                "total_discount": item['discount'], # discount in money of total quantity of products
                 "quantity_requested": item['quantity'],
                 "stock_obtained": st,
                 "rating": r,
                 "stock_real": sr,
+                "volume": total_volume,
+                "dimensions": {
+                    "width": matched_product.get('dimensions', {}).get('width', 0),
+                    "height": matched_product.get('dimensions', {}).get('height', 0),
+                    "depth": matched_product.get('dimensions', {}).get('depth', 0)
+                }
             })
             
-            # Print to console (Requirement d)
+            # Print to console
             print(f"--- Product ID: {product_id} ---")
             print(f"Name: {matched_product.get('title', 'N/A')}")
             print(f"Price per unit: {item['price']}")
-            print(f"Total discount: {item['discount']}") # Assuming this is the discount amount for the item
+            print(f"Total discount: {item['discount']}") # discount in money of total quantity of products
             print(f"Quantity requested: {item['quantity']}")
             print(f"Stock obtained (St): {st}")
             print(f"Rating (r): {r}")
             print(f"Stock real (Sr): {sr}")
             print("-" * 20)
 
-        # 3. Verify stock (Requirement e)
+        # Verify stock
         for product in processed_products:
             if product['quantity_requested'] > product['stock_real']:
                 return Response(
@@ -75,7 +87,7 @@ class CartPurchaseAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        # 4. Tarification a couriers (Requirement f)
+        # Tarification a couriers
         courier_origin_data = {
             "name": "Tienda Flapp",
             "phone": "+569 1234 5678",
@@ -92,7 +104,7 @@ class CartPurchaseAPIView(APIView):
         print(f"Uder Price: {uder_price}")
         print("-" * 20)
 
-        # 5. Get the lowest price and return (Requirement g)
+        # Get the lowest price and return (Requirement g)
         best_price = float('inf')
         best_courier = None
 
@@ -168,7 +180,7 @@ class CartPurchaseAPIView(APIView):
             items_payload.append({
                 "quantity": product['quantity_requested'],
                 "value": product['price_per_unit'],
-                "volume": product['volume_per_unit'] * product['quantity_requested'] # Total volume for all units of this product
+                "volume": product['volume'] * product['quantity_requested'] # Total volume for all units of this product
             })
 
         payload = {
@@ -176,8 +188,8 @@ class CartPurchaseAPIView(APIView):
             "waypoints": [
                 {
                     "type": "PICK_UP",
-                    "addressStreet": origin_data['addressStreet'],
-                    "city": origin_data['city'],
+                    "addressStreet": origin_data['address'],
+                    "city": origin_data['commune'], # For simplicity we will just give the commune in the city. We could have also just sent "Santiago" assuming this only works in Santiago.
                     "phone": origin_data['phone'],
                     "name": origin_data['name']
                 },
@@ -222,11 +234,11 @@ class CartPurchaseAPIView(APIView):
                 "name": product['name'],
                 "quantity": product['quantity_requested'],
                 "price": product['price_per_unit'],
-                "dimensions": product['dimensions_per_unit'] # Use the dummy dimensions
+                "dimensions": product['dimensions']
             })
 
         payload = {
-            "pickup_address": origin_data['addressStreet'],
+            "pickup_address": origin_data['address'],
             "pickup_name": origin_data['name'],
             "pickup_phone_number": origin_data['phone'],
             "dropoff_address": customer_data['shipping_street'],

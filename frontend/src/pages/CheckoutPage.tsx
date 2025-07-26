@@ -34,36 +34,38 @@ const CheckoutPage: React.FC = () => {
 
   const handleQuoteShipping = () => {
     if (!customerData) {
-      toast.custom("Por favor, ingresa tus datos de envío primero.");
-      navigate("/shipping"); // Redirigir a la vista de datos de envío
+      toast("Por favor, completa tus datos de envío.", {
+        icon: "🚚",
+      });
+      navigate("/shipping");
       return;
     }
-    navigate("/shipping"); // Simplemente navega, el botón de cotizar estará allí
+    navigate("/shipping");
   };
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <h2 className="mb-4 text-2xl font-bold text-gray-700">
-          Tu carrito está vacío.
-        </h2>
-        <button
-          onClick={() => navigate("/")}
-          className="px-4 py-2 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700"
-        >
-          Volver a la página inicial
-        </button>
+      <div className="flex flex-col items-center justify-center min-h-screen p-[128px]">
+        <div className="relative max-w-3xl p-12 overflow-hidden border rounded-lg shadow-lg border-white/20 bg-white/10 backdrop-blur-md backdrop-saturate-150">
+          <h2 className="mb-4 text-2xl font-bold">Tu carrito está vacío.</h2>
+          <Button
+            onClick={() => navigate("/")}
+            iconRight="mingcute:home-2-fill"
+          >
+            Volver a la página inicial
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen p-[128px]">
       <div className="relative max-w-3xl p-12 overflow-hidden border rounded-lg shadow-lg border-white/20 bg-white/10 backdrop-blur-md backdrop-saturate-150">
         <div className="relative z-10 flex flex-col items-center text-white">
           <h1 className="mb-6 text-4xl font-bold">Resumen de Compra</h1>
 
-          <div className="mb-6">
+          <div className="w-full mb-6">
             {cartItems.map((item) => (
               <div
                 key={item.productId}
@@ -80,7 +82,7 @@ const CheckoutPage: React.FC = () => {
                   <div>
                     <p className="text-lg font-semibold">{item.name}</p>
                     <p className="text-sm text-neutral-200">
-                      Cantidad: {item.quantity}
+                      {item.quantity} en el carrito
                     </p>
                   </div>
                 </div>
@@ -107,41 +109,54 @@ const CheckoutPage: React.FC = () => {
           </div>
 
           {customerData && (
-            <div className="pt-4 mb-6 border-t">
-              <h2 className="mb-4 text-2xl font-semibold text-gray-700">
-                Datos de Envío:
-              </h2>
-              <p className="text-gray-700">**Nombre:** {customerData.name}</p>
-              <p className="text-gray-700">
-                **Dirección:** {customerData.shipping_street},{" "}
+            <div className="w-full pt-4 mb-6 border-t">
+              <h2 className="mb-4 text-2xl font-semibold">Datos de Envío:</h2>
+              <p className="">
+                <strong>Nombre:</strong> {customerData.name}
+              </p>
+              <p className="">
+                <strong>Dirección:</strong> {customerData.shipping_street},{" "}
                 {customerData.commune}
               </p>
-              <p className="text-gray-700">
-                **Teléfono:** {customerData.phone}
+              <p className="">
+                <strong>Teléfono:</strong> {customerData.phone}
               </p>
             </div>
           )}
 
           {shippingQuote && (
-            <div className="pt-4 mb-6 border-t">
-              <h2 className="mb-4 text-2xl font-semibold text-gray-700">
+            <div className="w-full pt-4 mb-6 border-t">
+              <h2 className="mb-4 text-2xl font-semibol">
                 Cotización de Despacho:
               </h2>
-              <p className="text-xl font-bold text-green-700">
-                Envío Flapp con {shippingQuote.courier} ⚡️ - ${" "}
-                {shippingQuote.price.toFixed(2)}
-              </p>
+              <div className="p-8 rounded-lg bg-success-100">
+                <p className="text-xl font-bold text-green-700">
+                  Envío Flapp con {shippingQuote.courier} ⚡️ - ${" "}
+                  {shippingQuote.price.toFixed(2)}
+                </p>
+              </div>
             </div>
           )}
 
-          <div className="flex justify-between pt-6 mt-8 space-x-4 border-t">
-            <Button onClick={handleGoBack}>Volver</Button>
+          <div className="flex justify-between w-full pt-6 mt-8 space-x-4 border-t">
+            <div className="flex space-x-4">
+              <Button
+                onClick={handleGoBack}
+                iconLeft="mingcute:delete-back-fill"
+              >
+                Volver
+              </Button>
+              <Button
+                onClick={handleClearCart}
+                buttonType="error"
+                iconRight="mdi:trash-can"
+              ></Button>
+            </div>
             <Button
-              onClick={handleClearCart}
-              buttonType="error"
-              iconRight="mdi:trash-can"
-            ></Button>
-            <Button onClick={handleQuoteShipping} buttonType="primary">
+              onClick={handleQuoteShipping}
+              buttonType="success"
+              iconRight="mdi:truck-check"
+            >
               Cotizar Despacho
             </Button>
           </div>

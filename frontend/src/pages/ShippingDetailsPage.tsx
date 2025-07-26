@@ -16,6 +16,7 @@ import type {
 } from "../types/cart";
 import { quoteShipping } from "../services/apiServices";
 import toast from "react-hot-toast";
+import Button from "../components/ui/Button";
 
 const ShippingDetailsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const ShippingDetailsPage: React.FC = () => {
 
   useEffect(() => {
     if (customerData) {
-      setFormData(customerData); // Precarga los datos si ya existen en Redux
+      setFormData(customerData); // pre-load data if already exists in Redux
     }
   }, [customerData]);
 
@@ -46,7 +47,6 @@ const ShippingDetailsPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Validación básica del formulario
     if (
       !formData.name ||
       !formData.shipping_street ||
@@ -58,7 +58,6 @@ const ShippingDetailsPage: React.FC = () => {
     }
     dispatch(setCustomerData(formData));
     toast.success("Datos de envío guardados.");
-    // No redirigimos automáticamente para que el usuario pueda cotizar o volver
   };
 
   const handleQuoteShipping = async () => {
@@ -82,18 +81,15 @@ const ShippingDetailsPage: React.FC = () => {
 
     dispatch(setLoading(true));
     dispatch(setError(null));
-    dispatch(setCustomerData(formData)); // Asegura que los últimos datos del form estén en Redux
+    dispatch(setCustomerData(formData)); // Make sure the latest form data is in Redux
 
-    // Preparar payload para el backend
+    // Prepare payload for backend
     const productsPayload: BackendProductPayload[] = cartItems.map((item) => ({
       productId: item.productId.toString(), // El backend espera string para productId
       price: item.price,
       quantity: item.quantity,
-      // El descuento esperado por el backend es un monto total por producto,
-      // no un porcentaje. Para simplicidad, lo estableceremos en 0 o calcula el monto.
-      // Si el discountPercentage es un porcentaje, podrías calcular: item.originalPrice * item.quantity * (item.discountPercentage / 100)
       discount:
-        item.originalPrice * item.quantity * (item.discountPercentage / 100), // Ejemplo: descuento monetario total
+        item.originalPrice * item.quantity * (item.discountPercentage / 100),
     }));
 
     const backendPayload: CartBackendPayload = {
@@ -107,7 +103,7 @@ const ShippingDetailsPage: React.FC = () => {
       toast.success(
         `Envío Flapp con ${quote.courier} ⚡️ - $ ${quote.price.toFixed(2)}`
       );
-      navigate("/checkout"); // Volver al checkout para ver la cotización
+      navigate("/checkout"); // Go back to checkout
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       dispatch(setError(err.message));
@@ -185,27 +181,27 @@ const ShippingDetailsPage: React.FC = () => {
             </div>
 
             <div className="flex justify-between pt-4 space-x-4">
-              <button
-                type="button"
+              <Button
                 onClick={() => navigate("/checkout")}
-                className="px-4 py-2 bg-gray-500 rounded-lg shadow-md hover:bg-gray-600"
+                iconLeft="mingcute:delete-back-fill"
               >
                 Volver
-              </button>
-              <button
+              </Button>
+              <Button
+                buttonType="success"
                 type="submit"
-                className="px-4 py-2 text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700"
+                iconRight="mingcute:save-2-fill"
               >
                 Guardar Datos
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
                 onClick={handleQuoteShipping}
                 disabled={isLoading}
-                className="px-4 py-2 text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                buttonType="success"
+                iconRight="mdi:truck-check"
               >
                 {isLoading ? "Cotizando..." : "Cotizar Despacho"}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

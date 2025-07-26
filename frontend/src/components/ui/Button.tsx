@@ -7,6 +7,7 @@ type ButtonType = "primary" | "success" | "error" | "warning";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   buttonType?: ButtonType;
   iconRight?: string; // name of the icon (iconify icon name)
+  iconLeft?: string; // name of the icon (iconify icon name)
   children?: React.ReactNode;
   className?: string;
 }
@@ -14,6 +15,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export default function Button({
   buttonType = "primary",
   iconRight,
+  iconLeft,
   children,
   className = "",
   ...props
@@ -37,6 +39,7 @@ export default function Button({
 
   return (
     <button className={combinedClasses} {...props}>
+      {iconLeft && <Icon icon={iconLeft} className="text-xl" />}
       {children}
       {iconRight && <Icon icon={iconRight} className="text-xl" />}
     </button>
